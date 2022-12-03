@@ -47,7 +47,7 @@
   "parses an input description file into sections based on my weird little delimiter format ``` "
   [day]
   (let [content (string/split-lines (read-file day))]
-    (parse-inputs content)))
+    (if (< (count content) 14) (throw "invalid input") (parse-inputs content))))
 
 
 (defn run-puzzle
