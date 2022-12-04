@@ -57,4 +57,3 @@
             (println "real answer 1: " (solver1 (get p :real1)))
             (println "test match 2: " (solver2 (get p :input2)) (get p :expect2))
             (println "real answer 2: " (solver2 (get p :real2))))))
-
