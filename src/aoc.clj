@@ -7,6 +7,11 @@
   [f xs]
   (map #(map f %) xs))
 
+(defn filter-in
+  "filter an iterable of iterables"
+  [f xs]
+  (map #(filter f %) xs))
+
 (defn sum
   "sum it up!"
   [xs]
@@ -28,6 +33,9 @@
 (defn is-line-delimiter [input]
   (not (= nil (re-find #"^```" input))))
 
+
+(defn remove-blank-line-groups [input]
+  (filter not-empty (aoc/filter-in (comp not string/blank?) input)))
 
 (defn parse-inputs
   "returns a puzzle day file from normalized input format (description, inputs, expectations for testing)"
@@ -57,3 +65,34 @@
             (println "real answer 1: " (solver1 (get p :real1)))
             (println "test match 2: " (solver2 (get p :input2)) (get p :expect2))
             (println "real answer 2: " (solver2 (get p :real2))))))
+
+
+(defn transpose [m]
+  (apply mapv vector m))
+
+(defn pad-before [len val colls]
+  (let [diff (- len (count colls))]
+    (if (> diff 0) (concat (repeat diff val) colls) colls)))
+
+(defn not-nil [a]
+  (not= nil a))
+
+(defn take-n-non-nil [n colls]
+  (take n (filter aoc/not-nil colls)))
+
+(defn drop-n-non-nil [n colls]
+  (let [len (count colls)
+        , remain (drop n (filter aoc/not-nil colls))]
+    (pad-before len nil remain)))
+
+(defn unshift-non-nil [els colls]
+  (let [len (count colls), non-null (filter aoc/not-nil colls)]
+    (pad-before len nil (concat els non-null))))
+
+(defn zip [a b] (map vector a b))
+
+(defn index [a] (zip (range 0 (count a)) a))
+
+(defn debug-pipe [msg a]
+  (let [_ (println (if (not-empty msg) msg "DEBUG: ") a)]
+    a))
